@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "unique-postman-id",
+		"name": "Meeting Scheduler API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api"
+		}
+	],
+	"item": [
+		{
+			"name": "Meetings",
+			"item": [
+				{
+					"name": "List Meetings",
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/meetings/"
+					}
+				},
+				{
+					"name": "Create Meeting",
+					"request": {
+						"method": "POST",
+						"url": "{{base_url}}/meetings/",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Team Standup\",\n    \"start_time\": \"2024-08-30T10:00:00Z\",\n    \"end_time\": \"2024-08-30T11:00:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 3, 4],\n    \"room\": 1\n}"
+						}
+					}
+				},
+				{
+					"name": "Get Meeting",
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/meetings/1/"
+					}
+				},
+				{
+					"name": "Update Meeting",
+					"request": {
+						"method": "PUT",
+						"url": "{{base_url}}/meetings/1/",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Team Standup\",\n    \"start_time\": \"2024-08-30T10:30:00Z\",\n    \"end_time\": \"2024-08-30T11:30:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 3, 4, 5],\n    \"room\": 2\n}"
+						}
+					}
+				},
+				{
+					"name": "Delete Meeting",
+					"request": {
+						"method": "DELETE",
+						"url": "{{base_url}}/meetings/1/"
+					}
+				},
+				{
+					"name": "Conflicting Meeting Tests",
+					"item": [
+						{
+							"name": "Create Base Meeting",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Base Meeting\",\n    \"start_time\": \"2024-08-30T10:00:00Z\",\n    \"end_time\": \"2024-08-30T11:00:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 3],\n    \"room\": 1\n}"
+								}
+							}
+						},
+						{
+							"name": "Exact Time Conflict",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Exact Conflict Meeting\",\n    \"start_time\": \"2024-08-30T10:00:00Z\",\n    \"end_time\": \"2024-08-30T11:00:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 4],\n    \"room\": 1\n}"
+								}
+							}
+						},
+						{
+							"name": "Partial Overlap (Start)",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Partial Overlap Start Meeting\",\n    \"start_time\": \"2024-08-30T09:30:00Z\",\n    \"end_time\": \"2024-08-30T10:30:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 4],\n    \"room\": 1\n}"
+								}
+							}
+						},
+						{
+							"name": "Partial Overlap (End)",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Partial Overlap End Meeting\",\n    \"start_time\": \"2024-08-30T10:30:00Z\",\n    \"end_time\": \"2024-08-30T11:30:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 4],\n    \"room\": 1\n}"
+								}
+							}
+						},
+						{
+							"name": "Encompassing Conflict",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Encompassing Conflict Meeting\",\n    \"start_time\": \"2024-08-30T09:00:00Z\",\n    \"end_time\": \"2024-08-30T12:00:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 4],\n    \"room\": 1\n}"
+								}
+							}
+						},
+						{
+							"name": "Contained Conflict",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Contained Conflict Meeting\",\n    \"start_time\": \"2024-08-30T10:15:00Z\",\n    \"end_time\": \"2024-08-30T10:45:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [2, 4],\n    \"room\": 1\n}"
+								}
+							}
+						},
+						{
+							"name": "Different Room No Conflict",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Different Room No Conflict Meeting\",\n    \"start_time\": \"2024-08-30T10:00:00Z\",\n    \"end_time\": \"2024-08-30T11:00:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [4, 5],\n    \"room\": 2\n}"
+								}
+							}
+						},
+						{
+							"name": "Different Attendees No Conflict",
+							"request": {
+								"method": "POST",
+								"url": "{{base_url}}/meetings/",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Different Attendees No Conflict Meeting\",\n    \"start_time\": \"2024-08-30T10:00:00Z\",\n    \"end_time\": \"2024-08-30T11:00:00Z\",\n    \"organizer\": 1,\n    \"attendees\": [4, 5],\n    \"room\": 1\n}"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Meeting Rooms",
+			"item": [
+				{
+					"name": "List Meeting Rooms",
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/rooms/"
+					}
+				},
+				{
+					"name": "Create Meeting Room",
+					"request": {
+						"method": "POST",
+						"url": "{{base_url}}/rooms/",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Conference Room A\",\n    \"capacity\": 20\n}"
+						}
+					}
+				},
+				{
+					"name": "Get Meeting Room",
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/rooms/1/"
+					}
+				},
+				{
+					"name": "Update Meeting Room",
+					"request": {
+						"method": "PUT",
+						"url": "{{base_url}}/rooms/1/",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Conference Room A\",\n    \"capacity\": 25\n}"
+						}
+					}
+				},
+				{
+					"name": "Delete Meeting Room",
+					"request": {
+						"method": "DELETE",
+						"url": "{{base_url}}/rooms/1/"
+					}
+				}
+			]
+		}
+	]
+}
